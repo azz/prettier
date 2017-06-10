@@ -152,7 +152,10 @@ function massageAST(ast) {
     // styled-components
     if (
       ast.type === "TaggedTemplateExpression" &&
-      ast.tag.type === "MemberExpression"
+      ast.tag.type === "MemberExpression" &&
+      (ast.tag.object.name === "styled" ||
+        (/^[A-Z]/.test(ast.tag.object.name) &&
+          ast.tag.property.name === "extend"))
     ) {
       newObj.quasi.quasis.forEach(quasi => delete quasi.value);
     }

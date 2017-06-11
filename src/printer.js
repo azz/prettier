@@ -429,7 +429,17 @@ function genericPrintNoParens(path, options, print, args) {
         parts.push("async ");
       }
 
-      parts.push(printFunctionTypeParameters(path, options, print));
+      parts.push(
+        group(
+          indent(
+            concat([
+              softline,
+              printFunctionTypeParameters(path, options, print),
+              softline
+            ])
+          )
+        )
+      );
 
       if (canPrintParamsWithoutParens(n)) {
         parts.push(path.call(print, "params", 0));
@@ -3279,7 +3289,7 @@ function printTypeParameters(path, options, print, paramsKey) {
     return concat(["<", join(", ", path.map(print, paramsKey)), ">"]);
   }
 
-  return group(
+  const printed = group(
     concat([
       "<",
       indent(
@@ -3297,6 +3307,8 @@ function printTypeParameters(path, options, print, paramsKey) {
       ">"
     ])
   );
+
+  return printed;
 }
 
 function printClass(path, options, print) {

@@ -132,17 +132,23 @@ function fromHtmlParser2(path, options) {
 
     case "attribute": {
       /*
-       * Vue binding sytax: JS expressions
+       * Vue and Knockout binding sytax: JS expressions
        * :class="{ 'some-key': value }"
        * v-bind:id="'list-' + id"
        * v-if="foo && !bar"
        * @click="someFunction()"
+       * data-bind="foo, bar: {}"
        */
-      if (/(^@)|(^v-)|:/.test(node.key) && !/^\w+$/.test(node.value)) {
+      const isVueKey = /(^@)|(^v-)|:/.test(node.key);
+      const isKnockoutKey = node.key === "data-bind";
+
+      if ((isVueKey || isKnockoutKey) && !/^\w+$/.test(node.value)) {
         return {
           text: node.value,
           options: {
-            parser: parseJavaScriptExpression,
+            parser: isKnockoutKey
+              ? parseKnockoutExpression
+              : parseJavaScriptExpression,
             // Use singleQuote since HTML attributes use double-quotes.
             // TODO(azz): We still need to do an entity escape on the attribute.
             singleQuote: true
@@ -232,6 +238,19 @@ function parseJavaScriptExpression(text, parsers) {
   return {
     type: "File",
     program: ast.program.body[0].expression
+  };
+}
+
+function parseKnockoutExpression(text, parsers) {
+  // Knockout expressions are evaulated as objects
+  const ast = parseJavaScriptExpression(`{ ${text} }`, parsers);
+  return {
+    type: "File",
+    program: {
+      // Print as a sequence expression so we don't print the braces
+      type: "SequenceExpression",
+      expressions: ast.program.properties
+    }
   };
 }
 

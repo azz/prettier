@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`data-bind.html 1`] = `
+<div data-bind="foo , bar : 3 ,
+baz: { someProp: someObservable }, quax: someOtherObservable()"></div>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+<div data-bind="
+    foo,
+    bar: 3,
+    baz: {
+      someProp: someObservable
+    },
+    quax: someOtherObservable()
+  " />
+
+`;

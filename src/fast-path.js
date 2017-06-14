@@ -362,6 +362,7 @@ FastPath.prototype.needsParens = function(options) {
 
     case "SequenceExpression":
       switch (parent.type) {
+        case "File":
         case "ReturnStatement":
           return false;
 

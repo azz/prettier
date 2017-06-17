@@ -180,7 +180,11 @@ function parseNestedCSS(node) {
       }
     }
     if (node.type === "css-atrule" && typeof node.params === "string") {
-      node.params = parseMediaQuery(node.params);
+      if (/media/.test(node.name)) {
+        node.params = parseMediaQuery(node.params);
+      } else {
+        node.params = parseValue(node.params);
+      }
     }
   }
   return node;

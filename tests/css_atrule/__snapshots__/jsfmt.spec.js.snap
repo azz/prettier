@@ -1,5 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`css-include.scss 1`] = `
+.selector {
+  @include absolute($top: $long-variable-name, $right: $long-variable-name, $left: auto, $bottom: auto);
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.selector {
+  @include absolute(
+    $top: $long-variable-name,
+    $right: $long-variable-name,
+    $left: auto,
+    $bottom: auto
+  );
+}
+
+`;
+
 exports[`if-else.css 1`] = `
 @if $media == phonePortrait {
     $k: .15625;

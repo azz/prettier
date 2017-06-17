@@ -1,0 +1,3 @@
+.selector {
+  @include absolute($top: $long-variable-name, $right: $long-variable-name, $left: auto, $bottom: auto);
+}

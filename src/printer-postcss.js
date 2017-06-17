@@ -92,7 +92,16 @@ function genericPrint(path, options, print) {
     case "css-atrule": {
       const hasParams =
         n.params &&
-        !(n.params.type === "media-query-list" && n.params.value === "");
+        n.params.value !== "" &&
+        // Temp: this is to remove the " " in the hasParams further down
+        !(
+          n.params.type === "value-root" &&
+          n.params.group &&
+          n.params.group.group &&
+          n.params.group.group.groups &&
+          n.params.group.group.groups.length === 0
+        );
+
       return concat([
         "@",
         n.name,

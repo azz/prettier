@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`allows passing a string to resolve a parser 1`] = `
-"/* eslint-disable */
-bar();
-"
-`;

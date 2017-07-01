@@ -87,7 +87,7 @@ deployment:
   website:
     branch: master
     commands:
-      - git config --global user.email "test-site-bot@users.noreply.github.com"
+      - git config --global user.email "prettier-test-bot@users.noreply.github.com"
       - git config --global user.name "Website Deployment Script"
       - echo "machine github.com login test-site-bot password $GITHUB_TOKEN" > ~/.netrc
       - cd website && npm install && GIT_USER=test-site-bot npm run publish-gh-pages

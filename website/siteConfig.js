@@ -3,7 +3,7 @@
 const fs = require("fs");
 
 const PACKAGE = require("../package");
-const GITHUB_URL = `https://github.com/${PACKAGE.repository}`;
+const GITHUB_URL = `https://github.com/azz/prettier`;
 
 /* List of projects/orgs using your project for the users page */
 const users = [
@@ -51,7 +51,7 @@ const siteConfig = {
   url: PACKAGE.homepage,
   baseUrl: "/",
   projectName: PACKAGE.name,
-  repo: PACKAGE.repository,
+  repo: "azz/prettier",
   users,
   /* base url for editing docs, usage example: editUrl + 'en/doc1.md' */
   editUrl: `${GITHUB_URL}/edit/master/docs/`,

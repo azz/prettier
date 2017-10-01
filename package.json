@@ -27,6 +27,7 @@
     "globby": "^6.1.0",
     "graphql": "0.10.1",
     "ignore": "^3.3.3",
+    "is-unc-path": "^1.0.0",
     "jest-docblock": "21.1.0",
     "jest-validate": "21.1.0",
     "leven": "2.1.0",

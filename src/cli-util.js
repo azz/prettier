@@ -7,6 +7,7 @@ const minimist = require("minimist");
 const getStream = require("get-stream");
 const fs = require("fs");
 const globby = require("globby");
+const isUncPath = require("is-unc-path");
 const ignore = require("ignore");
 const chalk = require("chalk");
 const readline = require("readline");
@@ -243,21 +244,32 @@ function eachFilename(argv, patterns, callback) {
     }
   }
 
+  // Workaround for https://github.com/isaacs/node-glob/issues/74
+  const isUncPathWithNoGlob = fsPath =>
+    !globby.hasMagic(fsPath) && isUncPath(fsPath);
+
+  const uncPaths = patterns.filter(isUncPathWithNoGlob);
+  const regularPatterns = patterns.filter(
+    pattern => !isUncPathWithNoGlob(pattern)
+  );
+
   const ignorer = ignore().add(ignoreText);
 
   if (ignoreNodeModules) {
-    patterns = patterns.concat(["!**/node_modules/**", "!./node_modules/**"]);
+    regularPatterns.push("!**/node_modules/**", "!./node_modules/**");
   }
 
   try {
-    const filePaths = globby
-      .sync(patterns, { dot: true })
-      .map(
-        filePath =>
-          path.isAbsolute(filePath)
-            ? path.relative(process.cwd(), filePath)
-            : filePath
-      );
+    const filePaths = uncPaths.concat(
+      globby
+        .sync(regularPatterns, { dot: true })
+        .map(
+          filePath =>
+            path.isAbsolute(filePath)
+              ? path.relative(process.cwd(), filePath)
+              : filePath
+        )
+    );
     if (filePaths.length === 0) {
       console.error(`No matching files. Patterns tried: ${patterns.join(" ")}`);
       process.exitCode = 2;

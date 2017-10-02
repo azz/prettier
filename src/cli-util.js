@@ -11,6 +11,7 @@ const ignore = require("ignore");
 const chalk = require("chalk");
 const readline = require("readline");
 const leven = require("leven");
+const uncPathRegex = require("unc-path-regex")();
 
 const prettier = eval("require")("../index");
 const cleanAST = require("./clean-ast").cleanAST;
@@ -250,19 +251,13 @@ function eachFilename(argv, patterns, callback) {
   }
 
   try {
-    const filePaths = globby
-      .sync(patterns, { dot: true })
-      .map(
-        filePath =>
-          path.isAbsolute(filePath)
-            ? path.relative(process.cwd(), filePath)
-            : filePath
-      );
+    const filePaths = getFilesFromPatterns(patterns);
     if (filePaths.length === 0) {
       console.error(`No matching files. Patterns tried: ${patterns.join(" ")}`);
       process.exitCode = 2;
       return;
     }
+
     ignorer
       .filter(filePaths)
       .forEach(filePath =>
@@ -275,6 +270,42 @@ function eachFilename(argv, patterns, callback) {
     // Don't exit the process if one pattern failed
     process.exitCode = 2;
   }
+}
+
+function getFilesFromPatterns(patterns) {
+  const uncPatternTasks = [];
+  const nonUncPaterns = [];
+
+  // Hideous workaround for https://github.com/isaacs/node-glob/issues/74
+  patterns.forEach(pattern => {
+    const result = uncPathRegex.exec(pattern);
+    if (result) {
+      // Samba share, e.g.: `//localhost/c$`
+      const device = result[0];
+      uncPatternTasks.push({
+        pattern: pattern.substring(device.length),
+        options: { dot: true, root: device }
+      });
+    } else {
+      nonUncPaterns.push(pattern);
+    }
+  });
+
+  return globby
+    .sync(nonUncPaterns, { dot: true })
+    .map(
+      filePath =>
+        path.isAbsolute(filePath)
+          ? path.relative(process.cwd(), filePath)
+          : filePath
+    )
+    .concat(
+      flatMap(uncPatternTasks, task => globby.sync(task.pattern, task.options))
+    );
+}
+
+function flatMap(array, iteratee) {
+  return array.reduce((output, item) => output.concat(iteratee(item)), []);
 }
 
 function formatFiles(argv) {

@@ -3,6 +3,7 @@
 const util = require("./util");
 const docBuilders = require("./doc-builders");
 const concat = docBuilders.concat;
+const ifBreak = docBuilders.ifBreak;
 const join = docBuilders.join;
 const line = docBuilders.line;
 const hardline = docBuilders.hardline;
@@ -108,6 +109,13 @@ function genericPrint(path, options, print) {
         hasParams &&
         n.params.type === "media-query-list" &&
         /^\(\s*\)$/.test(n.params.value);
+      // @value x from "x.css";
+      const isValueImport =
+        n.name === "value" &&
+        hasParams &&
+        n.params.nodes &&
+        n.params.nodes[n.params.nodes.length - 1].value.includes(" from ");
+
       return concat([
         "@",
         // If a Less file ends up being parsed with the SCSS parser, Less
@@ -117,10 +125,23 @@ function genericPrint(path, options, print) {
           ? n.name
           : maybeToLowerCase(n.name),
         hasParams
-          ? concat([
-              isDetachedRulesetCall ? "" : " ",
-              path.call(print, "params")
-            ])
+          ? group(
+              concat([
+                isDetachedRulesetCall ? "" : " ",
+                isValueImport
+                  ? ifBreak(
+                      concat([
+                        "(",
+                        indent(softline),
+                        path.call(print, "params"),
+                        softline,
+                        ")"
+                      ]),
+                      path.call(print, "params")
+                    )
+                  : path.call(print, "params")
+              ])
+            )
           : "",
         n.nodes
           ? concat([

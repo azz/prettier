@@ -18,3 +18,23 @@ exports[`if-else.css 1`] = `
 }
 
 `;
+
+exports[`value-import.css 1`] = `
+@value value1, value 2, value 3, value 4 from "some-other-file.css";
+
+@value value1, value 2, value 3, value 4, value 5, value 6, value 7, value 8 from "some-other-file.css";
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@value value1, value 2, value 3, value 4 from "some-other-file.css";
+
+@value (
+  value1,
+  value 2,
+  value 3,
+  value 4,
+  value 5,
+  value 6,
+  value 7,
+  value 8 from "some-other-file.css"
+);
+
+`;

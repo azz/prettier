@@ -124,6 +124,10 @@ html body {
   line-height: 1.0;
 }
 
+.mainContainer .tldrSection ul li a {
+  font-size: 18px;
+}
+
 .tldrSection li::before {
   content: "* ";
   vertical-align: sub;

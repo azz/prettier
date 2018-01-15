@@ -97,6 +97,9 @@ const TldrSection = ({ language }) => (
             <li>You press save and code is formatted</li>
             <li>No need to discuss style in code review</li>
             <li>Saves you time and energy</li>
+            <li>
+              <a href={"/docs/" + language + "/why-prettier.html"}>And more</a>
+            </li>
           </ul>
         </div>
       </div>

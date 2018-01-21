@@ -45,7 +45,8 @@ const HomeSplash = props => {
       <div className="homeSplashFade">
         <div className="wrapper homeWrapper">
           <div className="animatedLogoWrapper">
-            <AnimatedLogo />
+            {/* <AnimatedLogo /> */}
+            <img src="/prettier-centered-logo-static.svg" style={{marginBottom: "40px"}}/>
           </div>
           <div className="inner">
             <div className="section promoSection">
